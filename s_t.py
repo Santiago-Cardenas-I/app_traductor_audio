@@ -8,7 +8,7 @@ import time
 import glob
 
 from gtts import gTTS
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 
 st.title("TRADUCTOR.")
 st.subheader("Escucho lo que quieres traducir.")
@@ -162,8 +162,15 @@ if result:
         tld = "co.za"
     
     def text_to_speech(input_language, output_language, text, tld):
-        translation = translator.translate(text, src=input_language, dest=output_language)
-        trans_text = translation.text
+        # --- NUEVA FORMA DE TRADUCIR CON DEEP-TRANSLATOR ---
+        if input_language == "zh-cn":
+            input_language = "zh-CN" # deep-translator prefiere mayúsculas aquí
+        if output_language == "zh-cn":
+            output_language = "zh-CN"
+            
+        trans_text = GoogleTranslator(source=input_language, target=output_language).translate(text)
+        # ---------------------------------------------------
+        
         tts = gTTS(trans_text, lang=output_language, tld=tld, slow=False)
         try:
             my_file_name = text[0:20]
